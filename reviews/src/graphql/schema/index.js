@@ -3,13 +3,14 @@ import { gql } from 'apollo-server-fastify'
 const Review = gql`
   type Review {
     body: String
-    author: User @provides(fields: "username")
+    authorId: ID!
+    author: User @provides(fields: "age")
     product: Product
   }
 
   extend type User @key(fields: "id") {
     id: ID! @external
-    username: String! @external
+    age: Int! @external
     reviews: [Review]
   }
 
@@ -26,23 +27,30 @@ export const resolvers = {
       console.log('User.reviews', data)
       return data
     },
-    username: (a) => {
-      return "nao sei porque"
+    age: async(user) => {
+      // console.log('User.age', user)
+      return 1
     }
   },
   Review: {
     author(review, {}, { dataSources }) {
-      console.log('review --->', review)
-      return { __typename: "User", id: review.authorID };
+      return { __typename: 'User', id: review.authorID };
+    },
+    product(review) {
+      console.log('=====================')
+      return { __typename: 'Product', upc: review.product.upc };
     }
+    // ,
+    // product(review, {}, { dataSources }) {
+    //   console.log('======')
+    //   return { __typename: 'Product', upc: review.product.upc };
+    // }
   },
   Product: {
     reviews: async(review, {}, { dataSources }) => {
-      // console.log('Product.reviews', review)
       const { upc } = review
       const data = await dataSources.reviewsDataSource.getAllByProductUPC(upc)
-      // console.log(data)
-            return data
+      return data
     }
   }
 }
@@ -50,4 +58,3 @@ export const resolvers = {
 export default [
   Review
 ]
-
