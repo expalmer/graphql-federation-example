@@ -13,7 +13,8 @@ export const resolver = {
   Product: {
     __resolveReference: async (item, { dataSources }) => {
       console.log('Product.__resolveReference', item)
-      return {}
+      const product = await dataSources.productsDataSource.getOne(item.upc)
+      return product
     },
     total:  async (args, {}, { dataSources }) => {
       console.log('Product.total', 1)

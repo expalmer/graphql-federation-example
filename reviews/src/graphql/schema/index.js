@@ -4,13 +4,12 @@ const Review = gql`
   type Review {
     body: String
     authorId: ID!
-    author: User @provides(fields: "age")
+    author: User
     product: Product
   }
 
   extend type User @key(fields: "id") {
     id: ID! @external
-    age: Int! @external
     reviews: [Review]
   }
 
@@ -18,17 +17,25 @@ const Review = gql`
     upc: String! @external
     reviews: [Review] 
   }
+
+  extend type Query {
+    all: [User]
+  }
 `
 
 export const resolvers = {
+  Query: {
+    all: async(user, {}, { dataSources }) => {
+      return [{ id: 1, age: 123 }, { id: 2, age: 432 }]
+    }
+  },
   User: {
     reviews: async(user, {}, { dataSources }) => {
       const data = await dataSources.reviewsDataSource.getAllByAuthorID(user.id)
-      console.log('User.reviews', data)
       return data
     },
     age: async(user) => {
-      // console.log('User.age', user)
+      console.log('User.age', user)
       return 1
     }
   },
@@ -37,14 +44,8 @@ export const resolvers = {
       return { __typename: 'User', id: review.authorID };
     },
     product(review) {
-      console.log('=====================')
       return { __typename: 'Product', upc: review.product.upc };
     }
-    // ,
-    // product(review, {}, { dataSources }) {
-    //   console.log('======')
-    //   return { __typename: 'Product', upc: review.product.upc };
-    // }
   },
   Product: {
     reviews: async(review, {}, { dataSources }) => {

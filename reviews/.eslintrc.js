@@ -1,7 +1,6 @@
 module.exports = {
-  extends: ['airbnb-base', 'plugin:jest/recommended', 'prettier'],
+  extends: ['airbnb-base', 'plugin:jest/recommended'],
   rules: {
-    'prettier/prettier': 'error',
     'import/prefer-default-export': 'off',
     'no-console': 0,
     semi: [2, 'never'],
@@ -11,7 +10,7 @@ module.exports = {
     'linebreak-style': 0,
     camelcase: [0, { properties: 'never' }],
   },
-  plugins: ['import', 'jest', 'prettier'],
+  plugins: ['import', 'jest'],
   env: {
     node: true,
     'jest/globals': true,

@@ -19,7 +19,15 @@ export default class Colors {
       {
         userId: 1,
         colorId: 3,
-      }
+      },
+      {
+        userId: 2,
+        colorId: 1,
+      },
+      {
+        userId: 2,
+        colorId: 3,
+      },
     ]
   }
 
